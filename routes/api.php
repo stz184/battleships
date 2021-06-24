@@ -17,3 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/ships/map', function () {
+    $mapper = new \App\Libraries\ShipsMapper(10, 10);
+    return response($mapper->getMap(),200);
+});
