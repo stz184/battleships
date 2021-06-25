@@ -1,10 +1,9 @@
-import React from "react";
+import React, {useCallback} from "react";
 import PropTypes from "prop-types"
 
-function Cell({guessStatus, gameState, isActive}) {
-
-    const getContents = React.useCallback(() => {
-        let content = "&#8226;";
+const Cell = ({guessStatus, gameState, isActive}) => {
+    const contents = useCallback(() => {
+        let content = '&#8226;';
         if (gameState === 'show') {
             content = isActive ? 'X' : '';
         } else {
@@ -18,14 +17,14 @@ function Cell({guessStatus, gameState, isActive}) {
     }, [gameState, guessStatus, isActive]);
 
     return (
-        <div className='cell' dangerouslySetInnerHTML={getContents()}/>
+        <div className='cell' dangerouslySetInnerHTML={contents()}/>
     );
-}
+};
 
 Cell.propTypes = {
     guessStatus: PropTypes.bool,
     gameState: PropTypes.string.isRequired,
     isActive: PropTypes.bool.isRequired
-}
+};
 
-export default Cell;
+export default React.memo(Cell);

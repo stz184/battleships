@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useCallback} from "react";
+import PropTypes from "prop-types"
 
-function Footer({hints, gameState, activeCellsCount, correctCellsCount, onCommand}) {
-    const remainingCount = () => {
+const Footer = ({hints, gameState, activeCellsCount, correctCellsCount, wrongCellsCount, onCommand}) => {
+    const remainingCount = useCallback(() => {
         if (gameState === 'recall') {
             return (
                 <div>
@@ -9,13 +10,13 @@ function Footer({hints, gameState, activeCellsCount, correctCellsCount, onComman
                 </div>
             )
         }
-    }
+    }, [gameState, activeCellsCount, correctCellsCount]);
 
-    const onKeyPress = (event) => {
+    const onKeyPress = useCallback((event) => {
         if (event.charCode === 13 && onCommand) {
             onCommand(event.target.value);
         }
-    };
+    }, [onCommand]);
 
     return (
         <div className='footer'>
@@ -24,21 +25,29 @@ function Footer({hints, gameState, activeCellsCount, correctCellsCount, onComman
                 <input type='text' placeholder='Example: A5' onKeyPress={onKeyPress} />
             </div>
             <div className='hint'>
-                {hints[gameState]}
+                {(hints[gameState] || '').replace('{shots}', correctCellsCount + wrongCellsCount)}
             </div>
             {remainingCount()}
         </div>
     )
-}
+};
 
 Footer.defaultProps = {
     hints: {
         ready: 'Get Ready',
         memorize: 'Positioning the ships',
         recall: 'Fire!',
-        won: 'Well done! You completed the game in 14 shots!',
+        won: 'Well done! You completed the game in {shots} shots!',
         lost: 'Game over :('
     }
-}
+};
+
+Footer.propTypes = {
+    hints: PropTypes.object.isRequired,
+    gameState: PropTypes.string.isRequired,
+    activeCellsCount: PropTypes.number.isRequired,
+    correctCellsCount: PropTypes.number.isRequired,
+    onCommand: PropTypes.func.isRequired
+};
 
 export default Footer;

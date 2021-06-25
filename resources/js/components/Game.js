@@ -1,22 +1,21 @@
 import React, {useEffect, useMemo, useState} from "react";
+import PropTypes from "prop-types"
 import Row from "./Row";
 import Cell from "./Cell";
 import Footer from "./Footer";
+import Header from "./Header";
 
-const GridCell = React.memo(function ({cellID, isActive, gameState, recordGuess, guessStatus}) {
-    return <Cell key={cellID}
-                 id={cellID}
-                 isActive={isActive}
-                 gameState={gameState}
-                 recordGuess={recordGuess}
-                 guessStatus={guessStatus} />
-});
-
-const LabelCell =React.memo(function ({id}) {
+const LabelCell = React.memo( ({id}) => {
     return (<div className={'cell header'}>{id}</div>);
 });
 
 const Game = ({rows, columns}) => {
+    const [gameState, setGameState] = useState('ready');
+    const [shotState, setShotState] = useState('');
+    const [correctGuesses, setCorrectGuess] = useState([]);
+    const [wrongGuesses, setWrongGuesses] = useState([]);
+    const [activeCells, setActiveCells] = useState({});
+
     const matrix = useMemo(() => {
         let matrix = [];
         for (let r = 0; r < rows; r++) {
@@ -25,10 +24,6 @@ const Game = ({rows, columns}) => {
         return matrix;
     }, [rows, columns]);
 
-    const [gameState, setGameState] = useState('ready');
-    const [correctGuesses, setCorrectGuess] = useState([]);
-    const [wrongGuesses, setWrongGuesses] = useState([]);
-    const [activeCells, setActiveCells] = useState({});
     const activeCellsCount = useMemo(() => {
         return Object.keys(activeCells).length;
     }, [activeCells]);
@@ -49,11 +44,14 @@ const Game = ({rows, columns}) => {
                 activeCells[cellID] = 'hit';
                 setActiveCells(activeCells);
                 if (Object.values(activeCells).indexOf(shipType) === -1) {
-                    console.log('SUNK!');
+                    setShotState('sunk');
+                } else {
+                    setShotState('hit');
                 }
-                setCorrectGuess(guesses => [...guesses, cellID])
+                setCorrectGuess(guesses => [...guesses, cellID]);
             } else {
-                setWrongGuesses(guesses => [...guesses, cellID])
+                setWrongGuesses(guesses => [...guesses, cellID]);
+                setShotState('miss');
             }
         }
     }, [activeCells, gameState]);
@@ -95,17 +93,22 @@ const Game = ({rows, columns}) => {
 
     return (
         <>
+            <Header shotState={shotState} />
             <div className="grid">
                 {matrix.map((row, key) => (
                     <React.Fragment key={'fragment-' + key}>
-                    {key === 0 && <Row key={'heading-row-' + key} id={'heading-row-' + key}><LabelCell id={''} key={'ajsj'} />{row.map(
+                    {key === 0 && (
+                        <Row key={'heading-row-' + key} id={'heading-' + key}><LabelCell id={''} key={'ajsj'} />
+                        {row.map(
                         cellID => <LabelCell id={cellID} key={'label-cell-' + cellID} />
-                    )}</Row>}
+                        )}
+                        </Row>)
+                    }
                     <Row key={key} id={'row-' + key}>
-                            <LabelCell key={'label-cell-' + key} id={(key + 10).toString(36).toUpperCase()} className='row-header' />
+                            <LabelCell key={'heading-' + key} id={(key + 10).toString(36).toUpperCase()} className='row-header' />
                             {row.map(
-                                cellID => <GridCell
-                                    key={cellID}
+                                cellID => <Cell
+                                    key={'cell-' + cellID}
                                     isActive={!!activeCells[cellID]}
                                     gameState={gameState}
                                     guessStatus={getGuessStatus(cellID)}
@@ -119,10 +122,16 @@ const Game = ({rows, columns}) => {
                 gameState={gameState}
                 activeCellsCount={activeCellsCount}
                 correctCellsCount={correctGuesses.length}
+                wrongCellsCount={wrongGuesses.length}
                 onCommand={recordGuess}
             />
         </>
     )
-}
+};
+
+Game.propTypes = {
+    rows: PropTypes.number.isRequired,
+    columns: PropTypes.number.isRequired
+};
 
 export default Game

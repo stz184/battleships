@@ -54,3 +54,8 @@ body {
 .cmd input {
   width: 300px;
 }
+
+.header {
+    height: 15px;
+    margin: 15px 0;
+}

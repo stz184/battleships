@@ -1,15 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './Battleships.css';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./Battleships.css";
 import Game from "./Game";
 
-function Battleships() {
+const Battleships = () => {
     return (
         <div className="App">
             <Game rows={10} columns={10} />
         </div>
     );
-}
+};
 
 export default Battleships;
 

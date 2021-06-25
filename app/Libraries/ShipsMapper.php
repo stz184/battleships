@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * I didn't wrapped this library as a service cause I don't really need the whole
+ * dependency injection and singleton logic for such as simple class without deps.
+ */
 
 namespace App\Libraries;
 
@@ -49,6 +52,14 @@ class ShipsMapper
         $row = ceil($randomSquare / 10);
         $possiblePositions = [];
 
+        /**
+         * Check if there are enough squares to place the ship
+         * horizontally (left or right from the randomly chosen starting point) and
+         * vertically (top or bottom from the starting point).
+         * Then, shuffle the possibilities and check if there is an overlap with other ships.
+         * Choose the first available positions
+         */
+
         // left
         if ($randomSquare - $size + 1 >= ($row * $cols) - ($cols - 1)) {
             $possiblePositions['left'] = [$randomSquare - $size + 1, $randomSquare, 1];
@@ -74,7 +85,7 @@ class ShipsMapper
         foreach ($possiblePositions as $position) {
             list($start, $end, $step) = $position;
             $squares = range($start, $end, $step);
-            if (!count(array_intersect($this->map, $squares))) {
+            if (!count(array_intersect(array_keys($this->map), $squares))) {
                 foreach ($squares as $square) {
                     $this->map[$square] = $ship;
                 }
