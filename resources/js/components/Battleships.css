@@ -1,0 +1,56 @@
+body {
+    background-color: #ffffff;
+}
+
+body {
+  text-align: center;
+}
+
+.grid {
+  display: table;
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+.row {
+  display: table-row;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  display: table-cell;
+  border: 1px solid #aaa;
+  background: #f8f8f8;
+  vertical-align: middle;
+}
+
+.cell.empty {
+  border-color: white !important;
+}
+
+.cell.header {
+  border: none;
+  background: white;
+}
+
+.cell.active {
+  background: #37a646;
+}
+
+.guess-true {
+  background-color: #00CC00;
+}
+
+.guess-false {
+  background-color: #CC0000
+}
+
+.cmd {
+  text-align: center;
+  margin: 15px 0;
+}
+
+.cmd input {
+  width: 300px;
+}

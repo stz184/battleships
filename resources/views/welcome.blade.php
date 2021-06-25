@@ -12,8 +12,7 @@
 <body>
 
 <!-- React root DOM -->
-<div id="example">
-</div>
+<div id="root"></div>
 
 <!-- React JS -->
 <script src="{{ asset('js/app.js') }}" defer></script>
