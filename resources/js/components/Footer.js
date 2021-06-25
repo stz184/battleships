@@ -13,8 +13,9 @@ const Footer = ({hints, gameState, activeCellsCount, correctCellsCount, wrongCel
     }, [gameState, activeCellsCount, correctCellsCount]);
 
     const onKeyPress = useCallback((event) => {
-        if (event.charCode === 13 && onCommand) {
-            onCommand(event.target.value);
+        if (event.charCode === 13) {
+            onCommand && onCommand(event.target.value);
+            event.target.value = '';
         }
     }, [onCommand]);
 
