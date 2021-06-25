@@ -75,7 +75,6 @@ const Game = ({rows, columns}) => {
             fetch('/api/ships/map')
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
                     setActiveCells(data);
                     setGameState('recall');
                 });
